@@ -1,28 +1,30 @@
-// 1. Firebase कॉन्फ़िगरेशन (अपने Firebase Console से क्रेडेंशियल्स बदलें)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+// 1. Firebase SDK Imports (आपका क्रेडेंशियल वर्ज़न 12.13.0)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
+// 2. आपका पर्सनल Firebase कॉन्फ़िगरेशन
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyD-uA2AbtyldMCHgVumDZx3ro9avKzDSNg",
+    authDomain: "janta-aec36.firebaseapp.com",
+    projectId: "janta-aec36",
+    storageBucket: "janta-aec36.firebasestorage.app",
+    messagingSenderId: "656922061658",
+    appId: "1:656922061658:web:65f773b55e0b565d20a163",
+    measurementId: "G-2QCFRNY5XG"
 };
 
-// Firebase इनिशियलाइज करें
+// Firebase और Firestore को इनिशियलाइज करें
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 2. DOM एलिमेंट्स
+// 3. HTML DOM Elements
 const newsContainer = document.getElementById('newsContainer');
 const themeToggle = document.getElementById('themeToggle');
 const htmlElement = document.documentElement;
 const tabs = document.querySelectorAll('.tab-item');
 const navItems = document.querySelectorAll('.nav-item');
 
-// 3. डार्क/लाइट थीम लॉजिक (यूज़र की चॉइस सेव रहेगी)
+// 4. डार्क/लाइट थीम लॉजिक (लोकल स्टोरेज सपोर्ट के साथ)
 const savedTheme = localStorage.getItem('theme') || 'dark';
 htmlElement.setAttribute('data-theme', savedTheme);
 themeToggle.innerText = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
@@ -33,19 +35,18 @@ themeToggle.addEventListener('click', () => {
     
     htmlElement.setAttribute('data-theme', newTheme);
     themeToggle.innerText = newTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
-    localStorage.setItem('theme', newTheme); // लोकल स्टोरेज में सेव करें
+    localStorage.setItem('theme', newTheme);
 });
 
-// 4. Firebase से डेटा लोड करने का मुख्य फ़ंक्शन
+// 5. Firestore से खबरें लोड करने का वर्किंग फ़ंक्शन
 async function fetchNews(categoryName = 'टॉप न्यूज़') {
-    // लोड होते समय यूज़र को 'लोडिंग...' दिखे
     newsContainer.innerHTML = `<div style="text-align:center; padding:20px; color:var(--sub-text);">समाचार लोड हो रहे हैं...</div>`;
 
     try {
         let newsQuery;
         const newsCollection = collection(db, "news_feeds");
 
-        // अगर 'टॉप न्यूज़' है तो सारी खबरें दिखाओ, नहीं तो कैटेगरी के हिसाब से फ़िल्टर करो
+        // कैटेगरी फ़िल्टर लॉजिक
         if (categoryName === 'टॉप न्यूज़') {
             newsQuery = query(newsCollection, orderBy("timestamp", "desc"));
         } else {
@@ -53,14 +54,14 @@ async function fetchNews(categoryName = 'टॉप न्यूज़') {
         }
 
         const querySnapshot = await getDocs(newsQuery);
-        newsContainer.innerHTML = ''; // लोडिंग टेक्स्ट हटाएं
+        newsContainer.innerHTML = ''; 
 
         if (querySnapshot.empty) {
             newsContainer.innerHTML = `<div style="text-align:center; padding:20px; color:var(--sub-text);">इस कैटेगरी में कोई खबर नहीं है।</div>`;
             return;
         }
 
-        // हर खबर के लिए कार्ड जनरेट करें
+        // लूप चलाकर खबरें रेंडर करना
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             
@@ -90,53 +91,45 @@ async function fetchNews(categoryName = 'टॉप न्यूज़') {
 
     } catch (error) {
         console.error("डेटा लोड करने में समस्या आई: ", error);
-        newsContainer.innerHTML = `<div style="text-align:center; padding:20px; color:red;">डेटा लोड करने में त्रुटि हुई। कृपया फायरबेस सेटिंग्स जांचें।</div>`;
+        newsContainer.innerHTML = `<div style="text-align:center; padding:20px; color:red;">डेटा लोड करने में त्रुटि हुई। कृपया Firestore Rules जांचें।</div>`;
     }
 }
 
-// 5. शेयर बटन वर्किंग लॉजिक
+// 6. शेयर बटन फंक्शनलिटी
 window.shareNews = function(title, url) {
     if (navigator.share) {
-        navigator.share({
-            title: title,
-            url: url
-        }).catch(err => console.log(err));
+        navigator.share({ title: title, url: url }).catch(err => console.log(err));
     } else {
-        // अगर ब्राउज़र वेब शेयर सपोर्ट नहीं करता तो लिंक कॉपी कर लें
         navigator.clipboard.writeText(url);
         alert("वीडियो लिंक कॉपी कर दिया गया है!");
     }
 };
 
-// 6. टॉप कैटेगरी टैब्स क्लिक वर्किंग
+// 7. कैटेगरी टैब क्लिक इवेंट्स
 tabs.forEach(tab => {
     tab.addEventListener('click', () => {
         document.querySelector('.tab-item.active').classList.remove('active');
         tab.classList.add('active');
-        
-        // क्लिक की गई कैटेगरी का डेटा फायरबेस से लाएं
-        const selectedCategory = tab.innerText;
-        fetchNews(selectedCategory);
+        fetchNews(tab.innerText);
     });
 });
 
-// 7. बॉटम नेविगेशन टैब्स क्लिक वर्किंग
+// 8. बॉटम नेविगेशन इवेंट्स
 navItems.forEach(item => {
     item.addEventListener('click', (e) => {
         e.preventDefault();
         document.querySelector('.nav-item.active').classList.remove('active');
         item.classList.add('active');
         
-        // होम या वीडियो पर क्लिक करने का एक्शन यहाँ हैंडल कर सकते हैं
         if(item.innerText.includes('वीडियो')) {
-            fetchNews('वीडियो'); // स्पेशल वीडियो टैब फ़िल्टर
+            fetchNews('वीडियो');
         } else if(item.innerText.includes('होम')) {
             fetchNews('टॉप न्यूज़');
         }
     });
 });
 
-// पहली बार पेज लोड होने पर 'टॉप न्यूज़' लोड करें
+// पेज लोड होते ही डिफ़ॉल्ट रूप से टॉप न्यूज़ लोड करें
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews('टॉप न्यूज़');
 });
