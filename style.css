@@ -53,7 +53,7 @@ body {
     box-shadow: var(--shadow);
 }
 
-/* JANTA WHITE + BLACK OUTLINE, VANI RED TEXT LOGO */
+/* JANTA (LIGHT में BLACK, DARK में WHITE) + VANI RED TEXT LOGO */
 .logo-container {
     display: flex;
     align-items: center;
@@ -63,9 +63,17 @@ body {
     cursor: pointer;
 }
 
+/* 1. Light Mode (डिफ़ॉल्ट रूप से JANTA बिल्कुल साफ़ ब्लैक दिखेगा, बिना किसी आउटलाइन के) */
 .logo-janta {
+    color: #000000; 
+    margin-right: 6px;
+    text-shadow: none; /* लाइट मोड में कोई आउटलाइन नहीं */
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+/* 2. Dark Mode (जब डार्क थीम चालू होगी, तो अपने आप वाइट होकर ब्लैक आउटलाइन आ जाएगी) */
+[data-theme="dark"] .logo-janta {
     color: #ffffff;
-    /* टेक्स्ट के चारों तरफ ब्लैक आउटलाइन (स्ट्रोक) */
     text-shadow: 
         -1px -1px 0 #000,  
          1px -1px 0 #000,
@@ -75,7 +83,6 @@ body {
          2px  0px 0 #000,
          0px -2px 0 #000,
          0px  2px 0 #000;
-    margin-right: 6px;
 }
 
 .logo-vani {
