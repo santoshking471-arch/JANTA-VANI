@@ -1,0 +1,260 @@
+here/* 1. Root Variables (थीम कलर्स - लाइट और डार्क मोड के लिए) */
+:root {
+    --bg-color: #ffffff;
+    --card-bg: #ffffff;
+    --text-color: #111111;
+    --sub-text: #666666;
+    --border-color: #e0e0e0;
+    --accent-color: #e53935; /* भास्कर रेड */
+    --live-green: #00c853;
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #ffffff;
+    --sub-text: #aaaaaa;
+    --border-color: #2d2d2d;
+}
+
+/* 2. Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+    padding-bottom: 60px; /* बॉटम नेविगेशन के लिए स्पेस */
+}
+
+/* 3. Header Section */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-container img {
+    height: 40px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+}
+
+.theme-toggle-btn {
+    background-color: var(--border-color);
+    color: var(--text-color);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* 4. Top Category Tabs (दैनिक भास्कर स्टाइल स्क्रॉल बार) */
+.tabs-container {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    scrollbar-width: none; /* Firefox के लिए */
+}
+
+.tabs-container::-webkit-scrollbar {
+    display: none; /* Chrome/Safari के लिए */
+}
+
+.tab-item {
+    display: inline-block;
+    padding: 12px 18px;
+    color: var(--sub-text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tab-item.active {
+    color: var(--accent-color);
+    font-weight: bold;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+/* 5. News Feed & Cards */
+.news-container {
+    max-width: 600px; /* मोबाइल और स्लिम लुक के लिए बेस्ट विड्थ */
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.news-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.text-area {
+    flex: 1;
+}
+
+.live-status {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.live-status .category {
+    color: var(--live-green);
+    margin-left: 5px;
+}
+
+.news-title {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.4;
+    color: var(--text-color);
+    margin-bottom: 6px;
+    /* 3 लाइन के बाद टेक्स्ट को ट्रंकेट करने के लिए */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-meta {
+    font-size: 12px;
+    color: var(--sub-text);
+    line-height: 1.4;
+}
+
+/* 6. Image Button Logic (वीडियो प्ले करने के लिए) */
+.image-area {
+    position: relative;
+    width: 110px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.news-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* वीडियो प्ले आइकॉन ओवरले */
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.image-area:hover .video-overlay {
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.play-icon {
+    width: 28px;
+    height: 28px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000000;
+    font-size: 12px;
+    padding-left: 2px; /* ट्रायंगल को सेंटर करने के लिए */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* 7. Card Footer & Share */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+    font-size: 12px;
+    color: var(--sub-text);
+}
+
+.share-btn {
+    background: none;
+    border: none;
+    color: var(--sub-text);
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 8. Bottom Navigation Bar */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 55px;
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--sub-text);
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.nav-item.active {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.nav-icon {
+    font-size: 18px;
+    margin-bottom: 2px;
+}
