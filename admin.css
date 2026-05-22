@@ -1,0 +1,243 @@
+/* 1. वैश्विक सेटिंग्स और कलर्स */
+:root {
+    --bg-color: #0d0e12;
+    --card-bg: #161824;
+    --text-color: #f3f4f6;
+    --sub-text: #9ca3af;
+    --border-color: #24283b;
+    --accent-color: #e53935; /* भास्कर रेड */
+    --success-color: #00c853;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 20px 12px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+/* छुपाने के लिए यूटिलिटी क्लास */
+.hidden {
+    display: none !important;
+}
+
+/* 2. लॉगिन बॉक्स स्टाइल */
+.login-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 30px 24px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    margin-top: 60px;
+    text-align: center;
+}
+
+.admin-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.login-container h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--text-color);
+}
+
+/* 3. फॉर्म फ़ील्ड्स स्टाइल */
+.form-group {
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--sub-text);
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    background-color: #0d0e12;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    height: 90px;
+}
+
+/* मुख्य बटन्स */
+.admin-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--accent-color), #ff7360);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.3);
+    margin-top: 10px;
+}
+
+.admin-btn:active {
+    transform: scale(0.98);
+}
+
+/* 4. मुख्य डैशबोर्ड लेआउट */
+.dashboard-container {
+    width: 100%;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* डैशबोर्ड हेडर */
+.dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-bg);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.admin-logo-dash {
+    height: 38px;
+    width: auto;
+}
+
+.logout-btn {
+    background: rgba(229, 57, 53, 0.1);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* 5. स्टेट्स ग्रिड (Total Views और Total Post Divs) */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-icon {
+    font-size: 24px;
+    background-color: #0d0e12;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.stat-info h3 {
+    font-size: 12px;
+    color: var(--sub-text);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.stat-info p {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* 6. क्विक एक्शन नैविगेशन बटन्स */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 12px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--sub-text);
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn.active {
+    background-color: rgba(229, 57, 53, 0.15);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* फॉर्म या लिस्ट के बाहरी डिब्बे */
+.section-box {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.section-box h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--accent-color);
+    padding-left: 8px;
+}
+
+/* 7. फीडबैक मैसेजेस */
+.msg {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 14px;
+    font-size: 13.5px;
+}
+
+.success-text {
+    color: var(--success-color);
+}
+
+.error-text {
+    color: var(--accent-color);
+}
