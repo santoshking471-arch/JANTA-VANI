@@ -53,42 +53,27 @@ body {
     box-shadow: var(--shadow);
 }
 
-/* JANTA (LIGHT में BLACK, DARK में WHITE) + VANI RED TEXT LOGO */
+/* नए इमेज लोगो का कंटेनर और उसकी परफेक्ट फिटिंग */
 .logo-container {
     display: flex;
     align-items: center;
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: 0.5px;
+    height: 100%;
     cursor: pointer;
 }
 
-/* 1. Light Mode (डिफ़ॉल्ट रूप से JANTA बिल्कुल साफ़ ब्लैक दिखेगा, बिना किसी आउटलाइन के) */
-.logo-janta {
-    color: #000000; 
-    margin-right: 6px;
-    text-shadow: none; /* लाइट मोड में कोई आउटलाइन नहीं */
-    transition: color 0.3s, text-shadow 0.3s;
+.brand-logo-img {
+    height: 44px; /* हेडर के अंदर परफेक्ट ऊंचाई */
+    width: auto;  /* चौड़ाई अपने आप सही अनुपात में सेट होगी */
+    object-fit: contain; /* इमेज खिंचेगी या दबेगी नहीं */
+    border-radius: 6px; /* कोनों को हल्का सा स्मूथ लुक देने के लिए */
+    padding: 2px 0;
+    transition: transform 0.2s;
 }
 
-/* 2. Dark Mode (जब डार्क थीम चालू होगी, तो अपने आप वाइट होकर ब्लैक आउटलाइन आ जाएगी) */
-[data-theme="dark"] .logo-janta {
-    color: #ffffff;
-    text-shadow: 
-        -1px -1px 0 #000,  
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000,
-        -2px  0px 0 #000,
-         2px  0px 0 #000,
-         0px -2px 0 #000,
-         0px  2px 0 #000;
+.brand-logo-img:active {
+    transform: scale(0.96); /* क्लिक करने पर हल्का सा कड़क एनिमेशन */
 }
 
-.logo-vani {
-    color: #e53935; /* ब्राइट रेड कलर */
-    text-shadow: 0 0 10px rgba(229, 57, 53, 0.3); /* हल्का नियॉन ग्लो */
-}
 
 .theme-toggle-btn {
     background: linear-gradient(135deg, var(--accent-color), #ff7360);
