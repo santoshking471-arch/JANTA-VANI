@@ -1,11 +1,13 @@
-/* 1. वैश्विक सेटिंग्स और कलर्स */
+/* ==========================================
+   1. वैश्विक सेटिंग्स और कलर्स (दैनिक भास्कर थीम)
+   ========================================== */
 :root {
     --bg-color: #0d0e12;
     --card-bg: #161824;
     --text-color: #f3f4f6;
     --sub-text: #9ca3af;
     --border-color: #24283b;
-    --accent-color: #e53935; /* भास्कर रेड */
+    --accent-color: #e53935; /* मुख्य लाल रंग */
     --success-color: #00c853;
 }
 
@@ -31,16 +33,18 @@ body {
     display: none !important;
 }
 
-/* 2. लॉगिन बॉक्स स्टाइल */
+/* ==========================================
+   2. लॉगिन बॉक्स स्टाइल (Clean Minimal Look)
+   ========================================== */
 .login-container {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 30px 24px;
+    padding: 35px 24px;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    margin-top: 60px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-top: 50px;
     text-align: center;
 }
 
@@ -52,13 +56,16 @@ body {
 }
 
 .login-container h2 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
-    margin-bottom: 24px;
+    margin-bottom: 26px;
     color: var(--text-color);
+    letter-spacing: 0.5px;
 }
 
-/* 3. फॉर्म फ़ील्ड्स स्टाइल */
+/* ==========================================
+   3. फॉर्म फ़ील्ड्स स्टाइल (इनपुट और बटन्स)
+   ========================================== */
 .form-group {
     margin-bottom: 18px;
     text-align: left;
@@ -80,23 +87,24 @@ input, textarea, select {
     border-radius: 8px;
     color: #ffffff;
     font-size: 15px;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input:focus, textarea:focus, select:focus {
     border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.15);
     outline: none;
 }
 
 textarea {
     resize: vertical;
-    height: 90px;
+    height: 95px;
 }
 
-/* मुख्य बटन्स */
+/* मुख्य सबमिट बटन */
 .admin-btn {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     background: linear-gradient(135deg, var(--accent-color), #ff7360);
     border: none;
     border-radius: 8px;
@@ -104,15 +112,23 @@ textarea {
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.3);
+    box-shadow: 0 4px 14px rgba(229, 57, 53, 0.3);
     margin-top: 10px;
+    transition: transform 0.1s, opacity 0.2s;
 }
 
 .admin-btn:active {
     transform: scale(0.98);
 }
 
-/* 4. मुख्य डैशबोर्ड लेआउट */
+.admin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   4. मुख्य डैशबोर्ड लेआउट
+   ========================================== */
 .dashboard-container {
     width: 100%;
     max-width: 550px;
@@ -133,22 +149,30 @@ textarea {
 }
 
 .admin-logo-dash {
-    height: 38px;
+    height: 40px;
     width: auto;
+    object-fit: contain;
 }
 
 .logout-btn {
-    background: rgba(229, 57, 53, 0.1);
-    border: 1px solid var(--accent-color);
+    background: rgba(229, 57, 53, 0.08);
+    border: 1px solid rgba(229, 57, 53, 0.4);
     color: var(--accent-color);
-    padding: 6px 12px;
+    padding: 7px 14px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
-/* 5. स्टेट्स ग्रिड (Total Views और Total Post Divs) */
+.logout-btn:hover {
+    background: rgba(229, 57, 53, 0.15);
+}
+
+/* ==========================================
+   5. स्टेट्स ग्रिड (Total Views और Total Posts Divs)
+   ========================================== */
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -159,33 +183,47 @@ textarea {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 14px;
+    padding: 16px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
-.stat-icon {
-    font-size: 24px;
-    background-color: #0d0e12;
-    padding: 8px;
-    border-radius: 8px;
+/* फिक्स्ड स्लिम SVG आइकॉन बॉक्स */
+.stat-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(229, 57, 53, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    color: var(--accent-color);
+    flex-shrink: 0;
+}
+
+.stat-svg {
+    width: 22px;
+    height: 22px;
 }
 
 .stat-info h3 {
     font-size: 12px;
     color: var(--sub-text);
     font-weight: 600;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
 .stat-info p {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #ffffff;
 }
 
-/* 6. क्विक एक्शन नैविगेशन बटन्स */
+/* ==========================================
+   6. क्विक एक्शन नैविगेशन बटन्स (Upload vs Manage)
+   ========================================== */
 .action-buttons {
     display: flex;
     gap: 10px;
@@ -193,45 +231,49 @@ textarea {
 
 .action-btn {
     flex: 1;
-    padding: 12px;
+    padding: 13px;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     color: var(--sub-text);
     border-radius: 8px;
-    font-size: 13.5px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .action-btn.active {
-    background-color: rgba(229, 57, 53, 0.15);
+    background-color: rgba(229, 57, 53, 0.12);
     border-color: var(--accent-color);
     color: var(--accent-color);
 }
 
-/* फॉर्म या लिस्ट के बाहरी डिब्बे */
+/* फॉर्म या लिस्ट के मुख्य डिब्बे */
 .section-box {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 14px;
-    padding: 20px;
+    padding: 22px;
 }
 
 .section-box h2 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     border-left: 4px solid var(--accent-color);
-    padding-left: 8px;
+    padding-left: 10px;
+    color: #ffffff;
 }
 
-/* 7. फीडबैक मैसेजेस */
+/* ==========================================
+   7. फीडबैक मैसेजेस (Success & Error Text)
+   ========================================== */
 .msg {
     text-align: center;
     font-weight: 600;
     margin-top: 14px;
-    font-size: 13.5px;
+    font-size: 14px;
+    min-height: 20px;
 }
 
 .success-text {
