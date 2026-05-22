@@ -325,6 +325,12 @@ body {
    यहाँ से नया सर्च बार और रिजल्ट बॉक्स का कोड शुरू है 
    ========================================== */
 
+/* इस क्लास को जोड़ने से बॉक्स बिना सर्च किए कभी नहीं दिखेगा */
+.hidden {
+    display: none !important;
+}
+
+
 .header-right-controls {
     display: flex;
     align-items: center;
