@@ -244,18 +244,26 @@ tabs.forEach(tab => {
     });
 });
 
-// 9. बॉटम नेविगेशन इवेंट्स
+// 9. बॉटम नेविगेशन इवेंट्स (प्रोफाइल रीडायरेक्ट फिक्स के साथ)
 navItems.forEach(item => {
     item.addEventListener('click', (e) => {
+        // 🎯 अगर यह प्रोफाइल लिंक (या कोई भी <a> टैग) है, तो इसे मत रोको, सीधा खुलने दो
+        if (item.tagName === 'A' || item.hasAttribute('href')) {
+            return; 
+        }
+
+        // बाकी बटन्स (होम और वीडियो) के लिए पुराना लॉजिक
         e.preventDefault();
         const activeNav = document.querySelector('.nav-item.active');
         if (activeNav) activeNav.classList.remove('active');
         item.classList.add('active');
         
-        const itemText = item.innerText.trim();
-        if(itemText.includes('वीडियो')) {
+        // यहाँ से आपकी पुरानी कंडीशन काम करेगी
+        const itemText = item.id || ''; // सेफ चेक के लिए आईडी का यूज़ किया
+        
+        if(item.id === 'nav-folder') {
             fetchNews('वीडियो');
-        } else if(itemText.includes('होम')) {
+        } else if(item.id === 'nav-home') {
             const activeTab = document.querySelector('.tab-item.active');
             if (activeTab) activeTab.classList.remove('active');
             if (tabs[0]) tabs[0].classList.add('active');
@@ -263,6 +271,7 @@ navItems.forEach(item => {
         }
     });
 });
+
 
 // डिफ़ॉल्ट लोडिंग
 document.addEventListener('DOMContentLoaded', () => {
