@@ -61,13 +61,12 @@ function formatTimeAgo(timestamp) {
     return `${diffInDays} दिन पहले`;
 }
 
-// 5. Firestore से खबरें लोड करने का मुख्य फ़ंक्शन (बिना इंडेक्स एरर के)
-async function fetchNews(locationName = 'टॉप न्यूज़') {
+// 5. Firestore से खबरें लोड करने का मुख्य फ़ंक्शन (Location और Category दोनों के साथ)
+async function fetchNews(tabName = 'टॉप न्यूज़') {
     newsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--sub-text);">समाचार लोड हो रहे हैं...</div>`;
 
     try {
         const newsCollection = collection(db, "news_feeds");
-        // बिना Composite Index एरर के डेटा मंगाने के लिए डायरेक्ट क्वेरी
         const querySnapshot = await getDocs(newsCollection);
         
         let allNews = [];
@@ -82,15 +81,21 @@ async function fetchNews(locationName = 'टॉप न्यूज़') {
             return timeB - timeA; 
         });
 
-        // अगर कोई विशेष लोकेशन चुनी है (जैसे 'छतरपुर'), तो डेटा फ़िल्टर करें
-        if (locationName !== 'टॉप न्यूज़' && locationName !== 'होम') {
-            allNews = allNews.filter(news => news.location === locationName);
+        // 🛠️ स्मार्ट फ़िल्टर: चेक करेगा कि ऊपर दबाया गया टैब 'category' है या 'location'
+        if (tabName !== 'टॉप न्यूज़' && tabName !== 'होम') {
+            allNews = allNews.filter(news => {
+                const dbLocation = news.location ? news.location.trim().toLowerCase() : '';
+                const dbCategory = news.category ? news.category.trim().toLowerCase() : '';
+                const targetTab = tabName.trim().toLowerCase();
+                
+                return dbLocation === targetTab || dbCategory === targetTab;
+            });
         }
 
         newsContainer.innerHTML = ''; 
 
         if (allNews.length === 0) {
-            newsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--sub-text);">${locationName} में अभी कोई खबर नहीं है।</div>`;
+            newsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--sub-text);">${tabName} में अभी कोई खबर नहीं है।</div>`;
             return;
         }
 
@@ -105,12 +110,13 @@ async function fetchNews(locationName = 'टॉप न्यूज़') {
                 formattedDate = new Date().toLocaleDateString('hi-IN', { day: 'numeric', month: 'long' });
             }
 
+            // 🎯 आपके बनाए मास्टरप्लान के अनुसार कस्टमाइज्ड यूआई कार्ड
             const cardHTML = `
                 <article class="news-card">
                     <div class="card-body">
                         <div class="text-area">
                             <div class="live-status">
-                                ● LIVE <span class="location-text">${data.location || 'लोकल'}</span>
+                                ● LIVE <span class="location-text">${data.category || 'सामान्य'}</span>
                             </div>
                             <h2 class="news-title">${data.title}</h2>
                             <p class="news-meta">
@@ -140,24 +146,21 @@ async function fetchNews(locationName = 'टॉप न्यूज़') {
 }
 
 // ==========================================
-// 6. न्यू लाइव सर्च और ऑटो शो/हाइड इंजन
+// 6. न्यू लाइव सर्च और ऑटो शो/हाइड इंजन (Category सपोर्ट के साथ)
 // ==========================================
 if (searchInput && resultsContainer) {
-    // सर्च बार पर टैप / क्लिक करने पर (अगर खाली नहीं है तो ऑन करें)
     searchInput.addEventListener('focus', () => {
         if (searchInput.value.trim() !== "") {
             resultsContainer.classList.remove('hidden');
         }
     });
 
-    // सर्च बार से बाहर क्लिक करने पर (ऑटोमैटिक ऑफ करें)
     searchInput.addEventListener('blur', () => {
         setTimeout(() => {
             resultsContainer.classList.add('hidden');
-        }, 250); // 250ms का डिले ताकि आइटम क्लिक काम कर सके
+        }, 250);
     });
 
-    // टाइप करने पर लाइव सर्च (टाइटल, लोकेशन और टॉपिक से मैच)
     searchInput.addEventListener('input', async (e) => {
         const searchText = e.target.value.toLowerCase().trim();
         
@@ -176,11 +179,13 @@ if (searchInput && resultsContainer) {
                 const data = doc.data();
                 const title = data.title || '';
                 const location = data.location || '';
+                const category = data.category || '';
                 const description = data.description || '';
 
-                // सर्च फिल्टर चेकिंग
+                // सर्च अब चारों चीज़ों (Title, Location, Category, Description) को स्कैन करेगा
                 if (title.toLowerCase().includes(searchText) || 
                     location.toLowerCase().includes(searchText) || 
+                    category.toLowerCase().includes(searchText) || 
                     description.toLowerCase().includes(searchText)) {
                     
                     matchesFound = true;
@@ -189,12 +194,11 @@ if (searchInput && resultsContainer) {
                     searchItem.className = 'search-item-card';
                     searchItem.innerHTML = `
                         <div class="search-item-info">
-                            <span class="search-item-meta">📍 ${location || 'लोकल'}</span>
+                            <span class="search-item-meta">📍 ${location || 'लोकल'} ${category ? `• ${category}` : ''}</span>
                             <h4>${title}</h4>
                         </div>
                     `;
 
-                    // सर्च रिजल्ट की खबर पर क्लिक करने का इवेंट
                     searchItem.addEventListener('click', () => {
                         if(data.videoUrl) {
                             window.open(data.videoUrl, '_blank');
