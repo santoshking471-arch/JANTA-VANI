@@ -318,3 +318,118 @@ body {
 .nav-item:active .nav-icon {
     transform: scale(0.85);
 }
+
+
+
+/* ==========================================
+   यहाँ से नया सर्च बार और रिजल्ट बॉक्स का कोड शुरू है 
+   ========================================== */
+
+.header-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 4px 12px;
+    max-width: 140px;
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .search-bar-container {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+#newsSearchInput {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    color: inherit;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+#newsSearchInput::placeholder {
+    color: #888;
+    font-size: 12.5px;
+}
+
+.search-bar-container:focus-within {
+    border-color: #e53935; 
+    box-shadow: 0 0 5px rgba(229, 57, 53, 0.3);
+}
+
+.search-results-scroll {
+    width: 100%;
+    max-width: 550px;
+    max-height: 280px;
+    overflow-y: auto;
+    background-color: var(--card-bg, #161824);
+    border: 1px solid rgba(229, 57, 53, 0.3);
+    border-radius: 12px;
+    margin: 8px auto;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    -webkit-overflow-scrolling: touch;
+}
+
+[data-theme="light"] .search-results-scroll {
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.search-results-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.search-results-scroll::-webkit-scrollbar-thumb {
+    background-color: #e53935;
+    border-radius: 10px;
+}
+
+.search-item-card {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+[data-theme="light"] .search-item-card {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.search-item-card:active {
+    background-color: rgba(229, 57, 53, 0.08);
+}
+
+.search-item-card:last-child {
+    border-bottom: none;
+}
+
+.search-item-info h4 {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: inherit;
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+.search-item-meta {
+    font-size: 11px;
+    color: #e53935;
+    font-weight: 700;
+}
