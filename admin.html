@@ -39,7 +39,7 @@
                 </div>
                 <div class="stat-info">
                     <h3>कुल व्यूज (Total Views)</h3>
-                    <p id="totalViews"> can गणना जारी है...</p>
+                    <p id="totalViews">गणना जारी है...</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -65,25 +65,40 @@
                     <label>न्यूज़ टाइटल (मुख्य हेडिंग)</label>
                     <input type="text" id="newsTitle" placeholder="यहाँ मुख्य खबर लिखें..." required>
                 </div>
+                
                 <div class="form-group">
                     <label>न्यूज़ डिस्क्रिप्शन (विवरण)</label>
-                    <textarea id="newsDesc" placeholder="खबर की पूरी जानकारी यहाँ डालें..." required></textarea>
+                    <textarea id="newsDesc" placeholder="خبر की पूरी जानकारी यहाँ डालें..." required></textarea>
                 </div>
+
                 <div class="form-group">
-                    <label>लोकेशन / कैटेगरी चुनें</label>
-                    <select id="newsLocation" required>
+                    <label>घटना की लोकेशन (मैनुअल टाइप करें)</label>
+                    <input type="text" id="newsLocation" placeholder="जैसे: बारबंध, गोयरा या छतरपुर" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label>कैटेगरी चुनें</label>
+                    <select id="newsCategory" required>
+                        <option value="" disabled selected>-- कैटेगरी चुनें --</option>
+                        <option value="टॉप न्यूज़">टॉप न्यूज़</option>
                         <option value="छतरपुर">छतरपुर</option>
                         <option value="चुनाव 2026">चुनाव 2026</option>
                         <option value="एमपी पटाखा BLAST">एमपी पटाखा BLAST</option>
-                        <option value="विदेश">विदेश</option>
                         <option value="वीडियो">विशेष वीडियो टैब</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label>न्यूज़ इमेज यूआरएल (Image URL)</label>
+                    <input type="url" id="newsImageUrl" placeholder="https://i.imgur.com/... इमेज का लिंक डालें" required autocomplete="off">
+                </div>
+
                 <div class="form-group">
                     <label>वीडियो यूआरएल (Video URL)</label>
                     <input type="url" id="videoUrl" placeholder="https://youtube.com/..." required>
                 </div>
-                <button type="submit" class="admin-btn" id="publishBtn">खबर लाइव पब्लिश करें</button>
+
+                <button type="submit" class="admin-btn" id="publishBtn">🚀 खबर लाइव पब्लिश करें</button>
             </form>
             <div id="statusMsg" class="msg"></div>
         </div>
