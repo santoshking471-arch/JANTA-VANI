@@ -91,26 +91,30 @@ async function loadDashboardStats() {
     }
 }
 
-// 9. नई न्यूज़ पोस्ट अपलोड लॉजिक
+// 9. नई न्यूज़ पोस्ट अपलोड लॉजिक (सभी नए फ़ील्ड्स के साथ फिक्स्ड)
 newsForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     publishBtn.disabled = true;
     publishBtn.innerText = "अपलोड हो रहा है...";
     statusMsg.innerText = "";
 
+    // सभी फ़ील्ड्स से डेटा निकालना (HTML IDs के आधार पर)
     const title = document.getElementById('newsTitle').value.trim();
     const description = document.getElementById('newsDesc').value.trim();
-    const location = document.getElementById('newsLocation').value;
-    const videoUrl = document.getElementById('videoUrl').value.trim();
+    const location = document.getElementById('newsLocation').value.trim(); // मैनुअल लोकेशन
+    const category = document.getElementById('newsCategory').value;         // ड्रॉपडाउन कैटेगरी
+    const imageUrl = document.getElementById('newsImageUrl').value.trim(); // इमेज यूआरएल
+    const videoUrl = document.getElementById('videoUrl').value.trim();     // वीडियो यूआरएल
 
     try {
-        // "news_feeds" कलेक्शन में डेटा जोड़ना (location और category दोनों फ़ील्ड्स के साथ)
+        // "news_feeds" कलेक्शन में सभी फ़ील्ड्स को अलग-अलग और सही नाम से जोड़ना
         await addDoc(collection(db, "news_feeds"), {
             title: title,
             description: description,
-            location: location,
-            category: location, 
-            videoUrl: videoUrl,
+            location: location,    // घटना की जगह (जैसे: बारबंध, गोयरा)
+            category: category,    // टैब नाम (जैसे: चुनाव 2026, छतरपुर)
+            image: imageUrl,       // थंबनेल इमेज का लिंक
+            videoUrl: videoUrl,    // यूट्यूब वीडियो का लिंक
             timestamp: serverTimestamp() // सर्वर लाइव टाइमस्टैम्प
         });
 
