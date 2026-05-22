@@ -273,20 +273,20 @@ body {
     font-weight: 600;
 }
 
-/* 8. Bottom Navigation Bar (सुपर अट्रैक्टिव वर्किंग लुक) */
-/* 8. Bottom Navigation Bar (प्रीमियम AI टूल और स्क्रीनशॉट स्टाइल) */
+
+/* 8. Bottom Navigation Bar (3 बटन्स के लिए परफेक्टली स्पेस-आउट) */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px; /* एकदम परफेक्ट हाइट */
-    background-color: var(--card-bg); /* लाइट थीम में लाइट और डार्क में प्रीमियम डार्क रहेगा */
+    height: 60px;
+    background-color: var(--card-bg);
     border-top: 1px solid var(--border-color);
     display: flex;
-    justify-content: space-around;
+    justify-content: space-around; /* तीनों बटन्स को बराबर दूरी पर रखेगा */
     align-items: center;
-    z-index: 100;
+    z-index: 1000;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
 }
 
@@ -297,34 +297,34 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #94a3b8; /* स्क्रीनशॉट जैसा प्रीमियम स्लेट ग्रे कलर */
     cursor: pointer;
     flex: 1;
     height: 100%;
-    transition: color 0.2s ease, transform 0.1s ease;
+    transition: transform 0.1s ease;
 }
 
-/* आइकॉन्स का साइज और स्टाइल */
-.nav-item i {
-    font-size: 24px; /* स्क्रीनशॉट जैसा बड़ा और साफ लुक */
+/* SVG आइकॉन्स का प्रीमियम स्लेट-ग्रे लुक */
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+    fill: #94a3b8; /* डिफ़ॉल्ट स्लेट ग्रे कलर */
+    transition: fill 0.2s ease;
 }
 
-/* एक्टिव (चयनित) बटन का कलर */
-.nav-item.active {
-    color: #334155; /* डार्क चारकोल कलर जैसा स्क्रीनशॉट में है */
+/* लाइट थीम में एक्टिव आइकॉन (डार्क चारकोल) */
+.nav-item.active svg {
+    fill: #334155; 
 }
 
-/* डार्क थीम एक्टिव होने पर एक्टिव बटन का कलर */
-[data-theme="dark"] .nav-item.active {
-    color: #f3f4f6; /* डार्क मोड में एक्टिव आइकॉन चमक उठेगा */
+/* डार्क थीम में एक्टिव आइकॉन (सफेद ग्लो) */
+[data-theme="dark"] .nav-item.active svg {
+    fill: #f3f4f6; 
 }
 
-/* क्लिक करने पर हल्का सा कड़क रिस्पॉन्स */
+/* क्लिक करने पर कड़क रिस्पॉन्स */
 .nav-item:active {
     transform: scale(0.9);
 }
-
-
 
 
 /* ==========================================
