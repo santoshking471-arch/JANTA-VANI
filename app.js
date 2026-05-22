@@ -1,6 +1,6 @@
 // 1. Firebase SDK Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
 // 2. आपका पर्सनल Firebase कॉन्फ़िगरेशन
 const firebaseConfig = {
@@ -23,24 +23,28 @@ const htmlElement = document.documentElement;
 const tabs = document.querySelectorAll('.tab-item');
 const navItems = document.querySelectorAll('.nav-item');
 
+// नए सर्च बार के एलिमेंट्स
+const searchInput = document.getElementById('newsSearchInput');
+const resultsContainer = document.getElementById('searchResultsContainer');
+
 // 4. डार्क/लाइट थीम लॉजिक
 const savedTheme = localStorage.getItem('theme') || 'dark';
 htmlElement.setAttribute('data-theme', savedTheme);
-themeToggle.innerText = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+if (themeToggle) themeToggle.innerText = savedTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
 
-themeToggle.addEventListener('click', () => {
-    const currentTheme = htmlElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    htmlElement.setAttribute('data-theme', newTheme);
-    themeToggle.innerText = newTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
-    localStorage.setItem('theme', newTheme);
-});
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        htmlElement.setAttribute('data-theme', newTheme);
+        themeToggle.innerText = newTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+        localStorage.setItem('theme', newTheme);
+    });
+}
 
 // टाइमस्टैम्प को "X मिनट पहले" या "X घंटे पहले" में बदलने वाला लाइव फ़ंक्शन
 function formatTimeAgo(timestamp) {
     if (!timestamp) return "अभी";
-    
-    // फायरबेस टाइमस्टैम्प को मिलीसेकंड में बदलें
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     const now = new Date();
     const diffInSeconds = Math.floor((now - date) / 1000);
@@ -57,36 +61,42 @@ function formatTimeAgo(timestamp) {
     return `${diffInDays} दिन पहले`;
 }
 
-// 5. Firestore से खबरें लोड करने का मुख्य फ़ंक्शन (Location और Live Time के साथ)
+// 5. Firestore से खबरें लोड करने का मुख्य फ़ंक्शन (बिना इंडेक्स एरर के)
 async function fetchNews(locationName = 'टॉप न्यूज़') {
     newsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--sub-text);">समाचार लोड हो रहे हैं...</div>`;
 
     try {
-        let newsQuery;
         const newsCollection = collection(db, "news_feeds");
+        // बिना Composite Index एरर के डेटा मंगाने के लिए डायरेक्ट क्वेरी
+        const querySnapshot = await getDocs(newsCollection);
+        
+        let allNews = [];
+        querySnapshot.forEach((doc) => {
+            allNews.push({ id: doc.id, ...doc.data() });
+        });
 
-        // अगर 'टॉप न्यूज़' या 'होम' है तो सारी खबरें दिखाओ, नहीं तो लोकेशन से फ़िल्टर करो
-        if (locationName === 'टॉप न्यूज़' || locationName === 'होम') {
-            newsQuery = query(newsCollection, orderBy("timestamp", "desc"));
-        } else {
-            newsQuery = query(newsCollection, where("location", "==", locationName), orderBy("timestamp", "desc"));
+        // जावास्क्रिप्ट के जरिए लेटेस्ट टाइमस्टैम्प को सबसे ऊपर सॉर्ट करें
+        allNews.sort((a, b) => {
+            const timeA = a.timestamp ? (a.timestamp.toMillis ? a.timestamp.toMillis() : new Date(a.timestamp).getTime()) : 0;
+            const timeB = b.timestamp ? (b.timestamp.toMillis ? b.timestamp.toMillis() : new Date(b.timestamp).getTime()) : 0;
+            return timeB - timeA; 
+        });
+
+        // अगर कोई विशेष लोकेशन चुनी है (जैसे 'छतरपुर'), तो डेटा फ़िल्टर करें
+        if (locationName !== 'टॉप न्यूज़' && locationName !== 'होम') {
+            allNews = allNews.filter(news => news.location === locationName);
         }
 
-        const querySnapshot = await getDocs(newsQuery);
         newsContainer.innerHTML = ''; 
 
-        if (querySnapshot.empty) {
+        if (allNews.length === 0) {
             newsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--sub-text);">${locationName} में अभी कोई खबर नहीं है।</div>`;
             return;
         }
 
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            
-            // 1. लाइव टाइम कैलकुलेट करें
+        allNews.forEach((data) => {
             const timeAgo = formatTimeAgo(data.timestamp);
             
-            // 2. डेट फ़ॉर्मेट करें (जैसे: 21 मई)
             let formattedDate = "";
             if (data.timestamp) {
                 const dateObj = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
@@ -95,7 +105,6 @@ async function fetchNews(locationName = 'टॉप न्यूज़') {
                 formattedDate = new Date().toLocaleDateString('hi-IN', { day: 'numeric', month: 'long' });
             }
 
-            // आपके नए स्टाइलिश CSS के साथ परफेक्ट कार्ड रेंडरिंग
             const cardHTML = `
                 <article class="news-card">
                     <div class="card-body">
@@ -109,7 +118,7 @@ async function fetchNews(locationName = 'टॉप न्यूज़') {
                             </p>
                         </div>
                         <a href="${data.videoUrl}" target="_blank" class="image-area">
-                            <img src="${data.image}" alt="News Image" class="news-img" onerror="this.src='https://via.placeholder.com/115x85?text=News'">
+                            <img src="${data.image || 'https://via.placeholder.com/115x85?text=News'}" alt="News Image" class="news-img" onerror="this.src='https://via.placeholder.com/115x85?text=News'">
                             <div class="video-overlay">
                                 <div class="play-icon">▶</div>
                             </div>
@@ -126,11 +135,92 @@ async function fetchNews(locationName = 'टॉप न्यूज़') {
 
     } catch (error) {
         console.error("डेटा लोड करने में समस्या आई: ", error);
-        newsContainer.innerHTML = `<div style="text-align:center; padding:20px; color:red;">डेटा लोड करने में त्रुटि हुई। कृपया सुनिश्चित करें कि आपने Firestore में Composite Index बना लिया है।</div>`;
+        newsContainer.innerHTML = `<div style="text-align:center; padding:20px; color:red;">डेटा लोड करने में त्रुटि हुई। कृपया नेटवर्क जांचें।</div>`;
     }
 }
 
-// 6. शेयर बटन फंक्शनलिटी
+// ==========================================
+// 6. न्यू लाइव सर्च और ऑटो शो/हाइड इंजन
+// ==========================================
+if (searchInput && resultsContainer) {
+    // सर्च बार पर टैप / क्लिक करने पर (अगर खाली नहीं है तो ऑन करें)
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim() !== "") {
+            resultsContainer.classList.remove('hidden');
+        }
+    });
+
+    // सर्च बार से बाहर क्लिक करने पर (ऑटोमैटिक ऑफ करें)
+    searchInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            resultsContainer.classList.add('hidden');
+        }, 250); // 250ms का डिले ताकि आइटम क्लिक काम कर सके
+    });
+
+    // टाइप करने पर लाइव सर्च (टाइटल, लोकेशन और टॉपिक से मैच)
+    searchInput.addEventListener('input', async (e) => {
+        const searchText = e.target.value.toLowerCase().trim();
+        
+        if (searchText === "") {
+            resultsContainer.classList.add('hidden');
+            resultsContainer.innerHTML = "";
+            return;
+        }
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "news_feeds"));
+            let matchesFound = false;
+            resultsContainer.innerHTML = "";
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const title = data.title || '';
+                const location = data.location || '';
+                const description = data.description || '';
+
+                // सर्च फिल्टर चेकिंग
+                if (title.toLowerCase().includes(searchText) || 
+                    location.toLowerCase().includes(searchText) || 
+                    description.toLowerCase().includes(searchText)) {
+                    
+                    matchesFound = true;
+
+                    const searchItem = document.createElement('div');
+                    searchItem.className = 'search-item-card';
+                    searchItem.innerHTML = `
+                        <div class="search-item-info">
+                            <span class="search-item-meta">📍 ${location || 'लोकल'}</span>
+                            <h4>${title}</h4>
+                        </div>
+                    `;
+
+                    // सर्च रिजल्ट की खबर पर क्लिक करने का इवेंट
+                    searchItem.addEventListener('click', () => {
+                        if(data.videoUrl) {
+                            window.open(data.videoUrl, '_blank');
+                        }
+                        searchInput.value = "";
+                        resultsContainer.classList.add('hidden');
+                    });
+
+                    resultsContainer.appendChild(searchItem);
+                }
+            });
+
+            if (matchesFound) {
+                resultsContainer.classList.remove('hidden');
+            } else {
+                resultsContainer.classList.remove('hidden');
+                resultsContainer.innerHTML = `<p style="color: #888; text-align: center; font-size: 13px; padding: 10px;">कोई खबर नहीं मिली...</p>`;
+            }
+
+        } catch (err) {
+            console.error("सर्च एरर: ", err);
+        }
+    });
+}
+
+// 7. शेयर बटन फंक्शनलिटी
 window.shareNews = function(title, url) {
     if (navigator.share) {
         navigator.share({ title: title, url: url }).catch(err => console.log(err));
@@ -140,29 +230,31 @@ window.shareNews = function(title, url) {
     }
 };
 
-// 7. टॉप कैटेगरी/लोकेशन टैब क्लिक इवेंट्स (सभी वर्किंग)
+// 8. टॉप कैटेगरी/लोकेशन टैब क्लिक इवेंट्स
 tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-        document.querySelector('.tab-item.active').classList.remove('active');
+        const activeTab = document.querySelector('.tab-item.active');
+        if (activeTab) activeTab.classList.remove('active');
         tab.classList.add('active');
-        fetchNews(tab.innerText);
+        fetchNews(tab.innerText.trim());
     });
 });
 
-// 8. बॉटम नेविगेशन इवेंट्स (सभी वर्किंग)
+// 9. बॉटम नेविगेशन इवेंट्स
 navItems.forEach(item => {
     item.addEventListener('click', (e) => {
         e.preventDefault();
-        document.querySelector('.nav-item.active').classList.remove('active');
+        const activeNav = document.querySelector('.nav-item.active');
+        if (activeNav) activeNav.classList.remove('active');
         item.classList.add('active');
         
         const itemText = item.innerText.trim();
         if(itemText.includes('वीडियो')) {
-            fetchNews('वीडियो'); // वीडियो टैब के लिए
+            fetchNews('वीडियो');
         } else if(itemText.includes('होम')) {
-            // होम पर क्लिक होने पर टॉप टैब्स में से 'टॉप न्यूज़' को एक्टिव करें और डेटा लोड करें
-            document.querySelector('.tab-item.active').classList.remove('active');
-            tabs[0].classList.add('active');
+            const activeTab = document.querySelector('.tab-item.active');
+            if (activeTab) activeTab.classList.remove('active');
+            if (tabs[0]) tabs[0].classList.add('active');
             fetchNews('टॉप न्यूज़');
         }
     });
