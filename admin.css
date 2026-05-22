@@ -64,7 +64,7 @@ body {
 }
 
 /* ==========================================
-   3. फॉर्म फ़ील्ड्स स्टाइल (इनपुट और बटन्स)
+   3. फॉर्म फ़ील्ड्स स्टाइल (इनपुट, सिलेक्ट और टेक्स्टएरिया)
    ========================================== */
 .form-group {
     margin-bottom: 18px;
@@ -88,6 +88,24 @@ input, textarea, select {
     color: #ffffff;
     font-size: 15px;
     transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none; /* ब्राउज़र का डिफ़ॉल्ट गंदा एरो हटाने के लिए */
+    -webkit-appearance: none;
+}
+
+/* 🛠️ सिलेक्ट ड्रॉपडाउन के लिए नया प्रीमियम एरो बैकग्राउंड */
+select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px; /* तीर के लिए दाईं तरफ जगह छोड़ी */
+    cursor: pointer;
+}
+
+/* लाइट थीम ब्राउज़र में सेलेक्ट के अंदर के ऑप्शन सही दिखने के लिए */
+select option {
+    background-color: #161824;
+    color: #ffffff;
 }
 
 input:focus, textarea:focus, select:focus {
