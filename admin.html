@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>जनता वाणी - एडमिन पैनल</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <div class="login-container" id="loginBox">
+        <img src="https://i.imgur.com/cwBsse2.jpeg" alt="Janta Vani Logo" class="admin-logo">
+        <h2>एडमिन लॉगिन</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>ईमेल आईडी</label>
+                <input type="email" id="loginEmail" placeholder="example@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label>पासवर्ड</label>
+                <input type="password" id="loginPass" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="admin-btn">प्रवेश करें</button>
+        </form>
+        <div id="loginError" class="msg error-text"></div>
+    </div>
+
+    <div class="dashboard-container hidden" id="dashboardBox">
+        
+        <header class="dash-header">
+            <img src="https://i.imgur.com/cwBsse2.jpeg" alt="Janta Vani Logo" class="admin-logo-dash">
+            <button class="logout-btn" id="logoutBtn">लॉगआउट</button>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon-box">
+                    <svg class="stat-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </div>
+                <div class="stat-info">
+                    <h3>कुल व्यूज (Total Views)</h3>
+                    <p id="totalViews"> can गणना जारी है...</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon-box">
+                    <svg class="stat-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <div class="stat-info">
+                    <h3>कुल पोस्ट (Total Posts)</h3>
+                    <p id="totalPosts">लोड हो रहा है...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn active" id="btnUploadNav">नई पोस्ट अपलोड करें</button>
+            <button class="action-btn" id="btnManageNav">पोस्ट मैनेज करें</button>
+        </div>
+
+        <div class="section-box" id="uploadSection">
+            <h2>नई न्यूज़ पोस्ट अपलोड करें</h2>
+            <form id="newsForm">
+                <div class="form-group">
+                    <label>न्यूज़ टाइटल (मुख्य हेडिंग)</label>
+                    <input type="text" id="newsTitle" placeholder="यहाँ मुख्य खबर लिखें..." required>
+                </div>
+                <div class="form-group">
+                    <label>न्यूज़ डिस्क्रिप्शन (विवरण)</label>
+                    <textarea id="newsDesc" placeholder="खबर की पूरी जानकारी यहाँ डालें..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>लोकेशन / कैटेगरी चुनें</label>
+                    <select id="newsLocation" required>
+                        <option value="छतरपुर">छतरपुर</option>
+                        <option value="चुनाव 2026">चुनाव 2026</option>
+                        <option value="एमपी पटाखा BLAST">एमपी पटाखा BLAST</option>
+                        <option value="विदेश">विदेश</option>
+                        <option value="वीडियो">विशेष वीडियो टैब</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>वीडियो यूआरएल (Video URL)</label>
+                    <input type="url" id="videoUrl" placeholder="https://youtube.com/..." required>
+                </div>
+                <button type="submit" class="admin-btn" id="publishBtn">खबर लाइव पब्लिश करें</button>
+            </form>
+            <div id="statusMsg" class="msg"></div>
+        </div>
+
+        <div class="section-box hidden" id="manageSection">
+            <h2>सभी पोस्ट मैनेज करें</h2>
+            <p style="color: var(--sub-text); text-align: center; padding: 20px; font-size: 14px;">
+                फायरबेस डेटाबेस से लाइव पोस्ट्स यहाँ सिंक हो रही हैं...
+            </p>
+        </div>
+
+    </div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
