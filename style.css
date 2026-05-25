@@ -445,3 +445,167 @@ body {
     color: #e53935;
     font-weight: 700;
 }
+
+/* ==========================================
+   📺 वीडियो फोल्डर टैब: यूट्यूब/फेसबुक रील्स स्टाइल (FIXED CSS)
+   ========================================== */
+
+/* जब न्यूज़ कंटेनर में स्क्रॉल स्नैप एक्टिव हो (सिर्फ वीडियो टैब के लिए) */
+#newsContainer[style*="scroll-snap-type"] {
+    position: fixed !important;
+    top: 56px !important; /* आपके टॉप हेडर या टैब्स की हाइट के अनुसार */
+    left: 0 !important;
+    width: 100vw !important;
+    height: calc(100dvh - 126px) !important; /* टॉप बार और बॉटम नेविगेशन को काटकर बची पूरी स्क्रीन */
+    background-color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    z-index: 99;
+}
+
+/* स्क्रॉल बार को पूरी तरह छुपाने के लिए (स्मूथ ऐप जैसा फील आएगा) */
+#newsContainer[style*="scroll-snap-type"]::-webkit-scrollbar {
+    display: none !important;
+}
+#newsContainer[style*="scroll-snap-type"] {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+/* रील्स का एक सिंगल फुल-स्क्रीन कार्ड */
+.youtube-shorts-card {
+    width: 100vw !important;
+    height: 100% !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    position: relative !important;
+    background-color: #000000 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* वीडियो और आईफ्रेम का बॉक्स */
+.shorts-media-box {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #000000 !important;
+}
+
+/* यूट्यूब प्लेयर और डायरेक्ट वीडियो दोनों के लिए फुल-स्क्रीन फिटिंग */
+.shorts-media-box iframe, 
+.shorts-media-box video {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    object-fit: contain !important; /* वीडियो का रेशियो बिगड़ेगा नहीं और ब्लैक बार्स के साथ बेस्ट दिखेगा */
+    z-index: 1 !important;
+}
+
+/* 📲 वीडियो के ऊपर तैरता हुआ (Overlay) फेसबुक/यूट्यूब टाइप डिटेल्स बॉक्स */
+.shorts-overlay-details {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    /* नीचे डार्क ग्रेडिएंट ताकि वीडियो चाहे लाइट हो या डार्क, टेक्स्ट एकदम साफ़ चमकेगा */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%) !important;
+    padding: 40px 16px 20px 16px !important;
+    color: #ffffff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    z-index: 10 !important;
+    box-sizing: border-box !important;
+    pointer-events: auto !important;
+}
+
+/* कैटेगरी बैज और टाइम */
+.shorts-badges {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+
+.shorts-category {
+    background-color: #e53935 !important; /* दैनिक भास्कर रेड थीम */
+    color: #ffffff !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.shorts-time {
+    font-size: 11px !important;
+    color: #cbd5e1 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* शॉर्ट्स न्यूज़ टाइटल (मुख्य हेडिंग) */
+.shorts-title {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* शॉर्ट्स विवरण */
+.shorts-desc {
+    font-size: 13px !important;
+    color: #e2e8f0 !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important; /* अधिकतम 2 लाइन डिटेल्स दिखाएगा */
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* फुटर (लोकेशन + शेयर बटन) */
+.shorts-footer-meta {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 4px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding-top: 8px !important;
+}
+
+.shorts-location {
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    font-weight: 600 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* प्रीमियम शेयर बटन */
+.shorts-share-btn {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    transition: all 0.2s ease !important;
+}
+
+.shorts-share-btn:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+}
