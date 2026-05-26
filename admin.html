@@ -8,24 +8,7 @@
 </head>
 <body>
 
-    <div class="login-container" id="loginBox">
-        <img src="https://i.imgur.com/cwBsse2.jpeg" alt="Janta Vani Logo" class="admin-logo">
-        <h2>एडमिन लॉगिन</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label>ईमेल आईडी</label>
-                <input type="email" id="loginEmail" placeholder="example@gmail.com" required>
-            </div>
-            <div class="form-group">
-                <label>पासवर्ड</label>
-                <input type="password" id="loginPass" placeholder="••••••••" required>
-            </div>
-            <button type="submit" class="admin-btn">प्रवेश करें</button>
-        </form>
-        <div id="loginError" class="msg error-text"></div>
-    </div>
-
-    <div class="dashboard-container hidden" id="dashboardBox">
+    <div class="dashboard-container" id="dashboardBox">
         
         <header class="dash-header">
             <img src="https://i.imgur.com/cwBsse2.jpeg" alt="Janta Vani Logo" class="admin-logo-dash">
@@ -39,7 +22,7 @@
                 </div>
                 <div class="stat-info">
                     <h3>कुल व्यूज (Total Views)</h3>
-                    <p id="totalViews">गणना जारी है...</p>
+                    <p id="totalViews"> do...</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -61,6 +44,7 @@
         <div class="section-box" id="uploadSection">
             <h2>नई न्यूज़ पोस्ट अपलोड करें</h2>
             <form id="newsForm">
+                
                 <div class="form-group">
                     <label>न्यूज़ टाइटल (मुख्य हेडिंग)</label>
                     <input type="text" id="newsTitle" placeholder="यहाँ मुख्य खबर लिखें..." required>
@@ -73,7 +57,7 @@
 
                 <div class="form-group">
                     <label>घटना की लोकेशन (मैनुअल टाइप करें)</label>
-                    <input type="text" id="newsLocation" placeholder="टाइप..." required autocomplete="off">
+                    <input type="text" id="newsLocation" placeholder="जैसे: चंदला, छतरपुर" required autocomplete="off">
                 </div>
 
                 <div class="form-group">
@@ -84,7 +68,8 @@
                         <option value="छतरपुर">छतरपुर</option>
                         <option value="चुनाव 2026">चुनाव 2026</option>
                         <option value="एमपी पटाखा BLAST">एमपी पटाखा BLAST</option>
-                        <option value="वीडियो">विशेष वीडियो टैब</option>
+                        <option value="विदेश">विदेश</option>
+                        <option value="वीडियो">वीडियो</option>
                     </select>
                 </div>
 
@@ -95,7 +80,7 @@
 
                 <div class="form-group">
                     <label>वीडियो यूआरएल (Video URL)</label>
-                    <input type="url" id="videoUrl" placeholder="https://youtube.com/..." required>
+                    <input type="url" id="videoUrl" placeholder="https://youtube.com/... या शॉर्ट्स का लिंक">
                 </div>
 
                 <button type="submit" class="admin-btn" id="publishBtn">🚀 खबर लाइव पब्लिश करें</button>
@@ -111,6 +96,58 @@
         </div>
 
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // TODO: यहाँ अपने Firebase Project का असली कॉन्फ़िगरेशन पेस्ट करें
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // सिर्फ इन दोनों ईमेल्स को परमिशन है (Whitelisted Emails)
+        const allowedEmails = [
+            "santoshking471@gmail.com",
+            "jantavaninewsnetwork307@gmail.com"
+        ];
+
+        // 🔐 कड़क सुरक्षा जाँच (Real-time Auth Guard)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // चेक करो कि क्या यूजर की ईमेल लिस्ट में है
+                if (!allowedEmails.includes(user.email.toLowerCase())) {
+                    // अगर गलत ईमेल है, तो बाहर का रास्ता दिखाओ
+                    forceLogout();
+                }
+                // अगर सही ईमेल है, तो वो इसी पेज पर रहेगा और अपना काम कर सकेगा।
+            } else {
+                // अगर यूजर ने लॉगिन ही नहीं किया है, तो उसे सीधे लॉगिन पेज पर फेंक दो
+                window.location.href = "login.html";
+            }
+        });
+
+        // लॉगआउट फंक्शन
+        function forceLogout() {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            });
+        }
+
+        // लॉगआउट बटन बाइंडिंग
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            forceLogout();
+        });
+    </script>
 
     <script type="module" src="admin.js"></script>
 </body>
