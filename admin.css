@@ -28,43 +28,13 @@ body {
     min-height: 100vh;
 }
 
-/* छुपाने के लिए यूटिलिटी क्लास */
+/* छुपाने के लिए यूटिलिटी क्लास (Auth Guard और टैब्स के लिए ज़रूरी) */
 .hidden {
     display: none !important;
 }
 
 /* ==========================================
-   2. लॉगिन बॉक्स स्टाइल (Clean Minimal Look)
-   ========================================== */
-.login-container {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 35px 24px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    margin-top: 50px;
-    text-align: center;
-}
-
-.admin-logo {
-    height: 50px;
-    width: auto;
-    object-fit: contain;
-    margin-bottom: 20px;
-}
-
-.login-container h2 {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 26px;
-    color: var(--text-color);
-    letter-spacing: 0.5px;
-}
-
-/* ==========================================
-   3. फॉर्म फ़ील्ड्स स्टाइल (इनपुट, सिलेक्ट और टेक्स्टएरिया)
+   2. फॉर्म फ़ील्ड्स स्टाइल (इनपुट, सिलेक्ट और टेक्स्टएरिया)
    ========================================== */
 .form-group {
     margin-bottom: 18px;
@@ -90,9 +60,10 @@ input, textarea, select {
     transition: border-color 0.2s, box-shadow 0.2s;
     appearance: none; /* ब्राउज़र का डिफ़ॉल्ट गंदा एरो हटाने के लिए */
     -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-/* 🛠️ सिलेक्ट ड्रॉपडाउन के लिए नया प्रीमियम एरो बैकग्राउंड */
+/* 🛠️ सिलेक्ट ड्रॉपडाउन के लिए प्रीमियम एरो बैकग्राउंड */
 select {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
     background-repeat: no-repeat;
@@ -102,10 +73,11 @@ select {
     cursor: pointer;
 }
 
-/* लाइट थीम ब्राउज़र में सेलेक्ट के अंदर के ऑप्शन सही दिखने के लिए */
+/* एंड्रॉइड और डार्क मोड ब्राउज़र में ऑप्शन सही दिखने के लिए */
 select option {
     background-color: #161824;
     color: #ffffff;
+    padding: 12px;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -145,7 +117,7 @@ textarea {
 }
 
 /* ==========================================
-   4. मुख्य डैशबोर्ड लेआउट
+   3. मुख्य डैशबोर्ड लेआउट (Slim & Android Friendly)
    ========================================== */
 .dashboard-container {
     width: 100%;
@@ -189,7 +161,7 @@ textarea {
 }
 
 /* ==========================================
-   5. स्टेट्स ग्रिड (Total Views और Total Posts Divs)
+   4. स्टेट्स ग्रिड (Total Views और Total Posts Divs)
    ========================================== */
 .stats-grid {
     display: grid;
@@ -225,7 +197,7 @@ textarea {
 }
 
 .stat-info h3 {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--sub-text);
     font-weight: 600;
     margin-bottom: 4px;
@@ -234,13 +206,13 @@ textarea {
 }
 
 .stat-info p {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: #ffffff;
 }
 
 /* ==========================================
-   6. क्विक एक्शन नैविगेशन बटन्स (Upload vs Manage)
+   5. क्विक एक्शन नैविगेशन बटन्स (Upload vs Manage)
    ========================================== */
 .action-buttons {
     display: flex;
@@ -284,7 +256,7 @@ textarea {
 }
 
 /* ==========================================
-   7. फीडबैक मैसेजेस (Success & Error Text)
+   6. फीडबैक मैसेजेस (Success & Error Text)
    ========================================== */
 .msg {
     text-align: center;
