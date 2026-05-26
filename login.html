@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janta Vani - Admin Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body {
+            background: radial-gradient(circle at center, #111827, #030712);
+        }
+        .neon-border {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen text-gray-200">
+
+    <div class="w-full max-w-sm p-6 mx-4 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 neon-border text-center">
+        <h2 class="text-2xl font-black tracking-wider bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-1">
+            JANTA VANI
+        </h2>
+        <p class="text-xs text-gray-400 mb-6">Admin Control Panel</p>
+
+        <div id="error-box" class="hidden mb-5 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-left"></div>
+
+        <button id="google-login-btn" class="w-full flex items-center justify-center gap-3 bg-white/10 hover:bg-white/15 border border-white/20 text-white text-sm font-medium py-3 px-4 rounded-xl transition duration-300 cursor-pointer backdrop-blur-sm">
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5.04c1.65 0 3.13.57 4.3 1.69l3.21-3.21C17.56 1.63 14.97 1 12 1 7.28 1 3.26 3.72 1.3 7.7l3.78 2.93C6.01 7.28 8.78 5.04 12 5.04z"/>
+                <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.42 3.58v2.97h3.91c2.28-2.1 3.54-5.19 3.54-8.7z"/>
+                <path fill="#FBBC05" d="M5.08 14.77c-.24-.71-.37-1.47-.37-2.27s.13-1.56.37-2.27L1.3 7.3C.47 8.97 0 10.83 0 12.8s.47 3.83 1.3 5.5l3.78-2.53z"/>
+                <path fill="#34A853" d="M12 23c3.24 0 5.97-1.08 7.96-2.93l-3.91-2.97c-1.08.72-2.48 1.16-4.05 1.16-3.22 0-6-2.24-6.97-5.59L1.25 15.2C3.21 19.18 7.23 23 12 23z"/>
+            </svg>
+            <span>Login with Google</span>
+        </button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // 🔥 अपने Firebase Project का असली कॉन्फ़िगरेशन यहाँ पेस्ट करें
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // सिर्फ इन दोनों जीमेल्स को लॉगिन की अनुमति है
+        const allowedEmails = [
+            "santoshking471@gmail.com",
+            "jantavaninewsnetwork307@gmail.com"
+        ];
+
+        const loginBtn = document.getElementById('google-login-btn');
+        const errorBox = document.getElementById('error-box');
+
+        loginBtn.addEventListener('click', () => {
+            errorBox.classList.add('hidden');
+            errorBox.innerText = "";
+
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+                    
+                    // 🔐 ईमेल चेकिंग लॉजिक
+                    if (allowedEmails.includes(user.email.toLowerCase())) {
+                        // लॉगिन सफल -> सीधे admin.html ओपन होगा 🚀
+                        window.location.href = "admin.html"; 
+                    } else {
+                        // गलत ईमेल होने पर तुरंत लॉगआउट करें और एरर दिखाएं
+                        signOut(auth).then(() => {
+                            errorBox.innerText = "🚨 एक्सेस डिनाइड! आपके पास इस पैनल का एक्सेस नहीं है।";
+                            errorBox.classList.remove('hidden');
+                        });
+                    }
+                })
+                .catch((error) => {
+                    errorBox.innerText = "लॉगिन फेल हुआ: " + error.message;
+                    errorBox.classList.remove('hidden');
+                });
+        });
+    </script>
+</body>
+</html>
